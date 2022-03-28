@@ -96,11 +96,7 @@ plot_branin()
 import trieste
 from trieste.models.gpflow import build_gpr
 
-"""observer = trieste.objectives.utils.mk_observer(scaled_branin)
 
-num_initial_points = 5
-initial_query_points = search_space.sample_sobol(num_initial_points)
-initial_data = observer(initial_query_points)"""
 
 #TEST#\/\/\/\/\/
 def build_model(data, kernel_func=None):
@@ -115,11 +111,30 @@ def build_model(data, kernel_func=None):
 
     return GaussianProcessRegression(gpr)
 
-
+# Number of preliminary data points that we need to sample
 num_initial_points = 5
-observer = trieste.objectives.utils.mk_observer(scaled_branin)
+
+# This is using the Sobol Sampling technique
 initial_query_points = search_space.sample_sobol(num_initial_points)
+
+
+x_1_sampling = []
+x_2_sampling = []
+
+for i in range(initial_query_points.shape[0]):
+    x_1_sampling.append(initial_query_points[i][0])
+    x_2_sampling.append(initial_query_points[i][1])
+
+print(initial_query_points)
+plt.plot(x_1_sampling,x_2_sampling,'o', color='black')
+plt.show()
+
+########### ___ Initial data (This should be gethered from FEM ___ ###########
+observer = trieste.objectives.utils.mk_observer(scaled_branin)
 initial_data = observer(initial_query_points)
+########### ___ Initial data (This should be gethered from FEM ___ ###########
+
+
 n_steps = 5
 model = build_model(initial_data)
 ask_tell = AskTellOptimizer(search_space, initial_data, model)
@@ -185,6 +200,9 @@ print(observations)
 x_1 = []
 x_2 = []
 obs = []
+
+
+
 for i in range(query_points.shape[0]):
     x_1.append(query_points[i][0])
     x_2.append(query_points[i][1])
