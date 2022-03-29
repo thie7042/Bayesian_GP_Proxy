@@ -265,3 +265,7 @@ plt.plot(x_1,x_2,obs,'o', color='black')
 plt.plot(x_pos_best, y_pos_best, z_pos_best,'o', color='red')
 
 plt.show()
+
+
+filename = 'finalized_model.sav'
+pickle.dump(model, open(filename, 'wb'))
