@@ -7,6 +7,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import gpflow
 
+
 from trieste.ask_tell_optimization import AskTellOptimizer
 from trieste.bayesian_optimizer import Record
 from trieste.data import Dataset
@@ -21,7 +22,7 @@ from trieste.models.gpflow import GaussianProcessRegression
 
 from skopt.benchmarks import branin as branin
 
-
+from trieste.acquisition.rule import OBJECTIVE
 from matplotlib import pyplot as plt
 from matplotlib.colors import LogNorm
 
@@ -146,6 +147,7 @@ for step in range(n_steps):
     state: Record[None] = ask_tell.to_record()
     saved_state = pickle.dumps(state)
 
+    ### Collect FEM here ###
     print(f"In the lab running the experiment #{step}.")
     new_datapoint = scaled_branin(new_config)
 
@@ -267,5 +269,46 @@ plt.plot(x_pos_best, y_pos_best, z_pos_best,'o', color='red')
 plt.show()
 
 
+
+
+
+final_dataset = result.try_get_final_datasets()[OBJECTIVE]
+final_model = result.try_get_final_models()[OBJECTIVE]
+
 filename = 'finalized_model.sav'
-pickle.dump(model, open(filename, 'wb'))
+pickle.dump(final_model, open(filename, 'wb'))
+
+
+
+
+#########################################################################################
+
+
+
+import os
+import pandas
+
+
+from sklearn.model_selection import train_test_split
+
+# Changing the current working directory
+
+X, Y = np.arange(10).reshape((5, 2)), range(5)
+
+# Splitting the dataset into 80% training data and 20% testing data.
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.6, random_state=0)
+
+
+
+print('________')
+print(X_test)
+
+
+predicted_values = final_model.predict(X_test)
+
+
+print(predicted_values)
+
+
+
+

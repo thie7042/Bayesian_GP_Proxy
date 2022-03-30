@@ -1,2 +1,3 @@
 Notes:
 
+https://secondmind-labs.github.io/trieste/notebooks/inequality_constraints.html
