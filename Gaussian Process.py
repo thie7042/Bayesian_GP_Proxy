@@ -136,7 +136,8 @@ initial_data = observer(initial_query_points)
 ########### ___ Initial data (This should be gethered from FEM ___ ###########
 
 
-n_steps = 5
+n_steps = 15
+#n_steps = 5
 model = build_model(initial_data)
 ask_tell = AskTellOptimizer(search_space, initial_data, model)
 for step in range(n_steps):
@@ -172,6 +173,7 @@ model = GaussianProcessRegression(gpflow_model, num_kernel_samples=100)
 
 bo = trieste.bayesian_optimizer.BayesianOptimizer(observer, search_space)
 
+#num_steps = 15
 num_steps = 15
 result = bo.optimize(num_steps, initial_data, model)
 dataset = result.try_get_final_dataset()
@@ -288,26 +290,6 @@ pickle.dump(final_model, open(filename, 'wb'))
 import os
 import pandas
 
-
-from sklearn.model_selection import train_test_split
-
-# Changing the current working directory
-
-X, Y = np.arange(10).reshape((5, 2)), range(5)
-
-# Splitting the dataset into 80% training data and 20% testing data.
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.6, random_state=0)
-
-
-
-print('________')
-print(X_test)
-
-
-predicted_values = final_model.predict(X_test)
-
-
-print(predicted_values)
 
 
 
