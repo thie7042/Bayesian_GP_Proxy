@@ -119,6 +119,7 @@ num_initial_points = 5
 initial_query_points = search_space.sample_sobol(num_initial_points)
 
 
+
 x_1_sampling = []
 x_2_sampling = []
 
